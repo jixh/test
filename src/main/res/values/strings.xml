@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name"><b>ResourcesManager</b></string>
+    <string name="test"><i>test</i></string>
+</resources>
