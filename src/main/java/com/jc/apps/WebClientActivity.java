@@ -3,6 +3,7 @@ package com.jc.apps;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -42,7 +43,9 @@ public class WebClientActivity extends Activity {
         wvParams.weight = 1;
         ((LinearLayout)v).addView(wv, wvParams);
 
-        wv.setWebViewClient(new WebViewClient(){
+        setWV();
+
+        wv.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return super.shouldOverrideUrlLoading(view, url);
@@ -51,7 +54,7 @@ public class WebClientActivity extends Activity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                title.setText(""+view.getTitle());
+                title.setText("" + view.getTitle());
             }
 
             @Override
@@ -59,6 +62,14 @@ public class WebClientActivity extends Activity {
                 super.onPageFinished(view, url);
             }
         });
+    }
+
+    private void setWV() {
+        wv.getSettings().setJavaScriptEnabled(true);
+        wv.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        wv.getSettings().setDefaultTextEncodingName("utf-8");
+        wv.getSettings().setAllowFileAccess(true);
+        wv.getSettings().setAllowFileAccessFromFileURLs(true);
     }
 
     private void initHeader(View v) {
@@ -85,5 +96,14 @@ public class WebClientActivity extends Activity {
                 wv.loadUrl(urlString);
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK  && wv.canGoBack()){
+                wv.goBack();
+                return true;
+        }
+        return false;
     }
 }
