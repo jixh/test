@@ -15,19 +15,20 @@ public class Test extends Activity {
         TextView tv = new TextView(this);
         setContentView(tv);
     }
-
-    @Override
+        @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-    }
 
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+
         }else{
+
         }
         if (newConfig.keyboard == Configuration.KEYBOARD_12KEY){
 
