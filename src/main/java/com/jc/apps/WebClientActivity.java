@@ -1,8 +1,14 @@
 package com.jc.apps;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jc on 10/2/2015.
@@ -69,7 +78,7 @@ public class WebClientActivity extends Activity {
         wv.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         wv.getSettings().setDefaultTextEncodingName("utf-8");
         wv.getSettings().setAllowFileAccess(true);
-        wv.getSettings().setAllowFileAccessFromFileURLs(true);
+//        wv.getSettings().setAllowFileAccessFromFileURLs(true);
     }
 
     private void initHeader(View v) {
@@ -98,6 +107,53 @@ public class WebClientActivity extends Activity {
         });
     }
 
+    public void getUrlFromText(String msg,TextView textview) {
+        Pattern pattern = Pattern.compile("(http://|https://|www.){1}[[^\\u4e00-\\u9fa5]&&\\w\\.\\-/:\\?\\&\\%\\@\\_a-zA-Z0-9\\=\\,]+", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(msg);
+        int startPoint=0;
+
+        SpannableString sps=new SpannableString(msg);
+        String url;
+        while (matcher.find(startPoint)) {
+            int endPoint = matcher.end();
+            url = matcher.group();
+            ClickableSpan clickSpan = new ClickSpan(url);
+            sps.setSpan(clickSpan, endPoint - url.length(), endPoint, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            startPoint = endPoint;
+        }
+        textview.setText(sps);
+        url = null;
+
+    }
+
+    class ClickSpan extends ClickableSpan {
+        String text;
+        TextPaint paint = null;
+
+        public ClickSpan(String text) {
+            super();
+            this.text = text;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            ds.linkColor = Color.parseColor("#00648f");
+        }
+
+        public void onClick(View widget) {
+            Intent intent = new Intent(WebClientActivity.this,
+                    WebClientActivity.class);
+            final Bundle bundle = new Bundle();
+            if (!text.startsWith( "https+://")) {
+                text = "https://" + text;
+            }
+            bundle.putString("url", text);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+    }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK  && wv.canGoBack()){
@@ -105,5 +161,17 @@ public class WebClientActivity extends Activity {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        destroyWV();
+    }
+
+    private void destroyWV() {
+        wv.removeAllViews();
+        wv.destroy();
+        wv = null;
     }
 }
