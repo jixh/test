@@ -3,17 +3,17 @@ package com.jc.apps;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.TextView;
 
 /**
  * Created by jc on 10/2/2015.
  */
 public class Test extends Activity {
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate        (savedInstanceState);
-        TextView tv = new TextView(this);
-        setContentView(tv);
+    protected void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_home);
     }
         @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
