@@ -33,6 +33,7 @@
         <activity android:name=".WebClientActivity" />
         <activity android:name=".AutoCompleteTextViewActivity" />
         <activity android:name=".Test" />
+        <activity android:name=".AnimationActivity" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
